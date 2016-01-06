@@ -9,6 +9,7 @@ function getLinkFunction($http, theme, util, type) {
     return function (scope, element, attrs) {
         scope.config = scope.config || {};
         var dom = element.find('div')[0], width, height, chart;
+        var chartEvent = {};
         function getSizes(config) {
             width = config.width || attrs.width || '100%';
             height = config.height || attrs.height || '100%';
@@ -111,6 +112,21 @@ function getLinkFunction($http, theme, util, type) {
             if (!chart) {
                 chart = echarts.init(dom, theme.get(scope.config.theme || 'macarons'));
             }
+            if (scope.config.event) {
+                if (!Array.isArray(scope.config.event)) {
+                    scope.config.event = [scope.config.event];
+                }
+                if (Array.isArray(scope.config.event)) {
+                    scope.config.event.forEach(function (ele) {
+                        if (!chartEvent[ele.type]) {
+                            chartEvent[ele.type] = true;
+                            chart.on(ele.type, function (param) {
+                                ele.fn(param);
+                            });
+                        }
+                    });
+                }
+            }
             // string type for data param is assumed to ajax datarequests
             if (angular.isString(scope.data)) {
                 if (isAjaxInProgress) {
@@ -167,13 +183,6 @@ function getLinkFunction($http, theme, util, type) {
                         textStyle: textStyle
                     });
                 }
-            }
-            // bind event
-            if (scope.config.on) {
-                Object.keys(scope.config.on).forEach(function (e) {
-                    chart.un(echarts.config.EVENT[e], scope.config.on[e]);
-                    chart.on(echarts.config.EVENT[e], scope.config.on[e]);
-                });
             }
         }
         // update when charts config changes

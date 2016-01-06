@@ -12,6 +12,7 @@ function getLinkFunction($http, theme, util, type) {
 
         var dom  = element.find('div')[0],
             width, height, chart;
+        var chartEvent = {};
 
         function getSizes(config) {
             width = config.width || attrs.width || '100%';
@@ -132,6 +133,23 @@ function getLinkFunction($http, theme, util, type) {
                 chart = echarts.init(dom, theme.get(scope.config.theme || 'macarons'));
             }
 
+            if (scope.config.event) {
+                if (!Array.isArray(scope.config.event)) {
+                    scope.config.event = [scope.config.event];
+                }
+
+                if (Array.isArray(scope.config.event)) {
+                    scope.config.event.forEach(function (ele) {
+                        if(!chartEvent[ele.type]) {
+                            chartEvent[ele.type] = true;
+                            chart.on(ele.type, function (param) {
+                                ele.fn(param);
+                            });
+                        }
+                    });
+                }
+            }
+
             // string type for data param is assumed to ajax datarequests
             if (angular.isString(scope.data)) {
                 if (isAjaxInProgress) { return; }
@@ -177,14 +195,6 @@ function getLinkFunction($http, theme, util, type) {
                 } else {
                     chart.showLoading({ text: scope.config.errorMsg || '没有数据', textStyle: textStyle });
                 }
-            }
-
-            // bind event
-            if (scope.config.on) {
-                Object.keys(scope.config.on).forEach(function(e) {
-                    chart.un(echarts.config.EVENT[e], scope.config.on[e]);
-                    chart.on(echarts.config.EVENT[e], scope.config.on[e]);
-                });
             }
         }
 
