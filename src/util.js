@@ -238,10 +238,10 @@ angular.module('angular-echarts.util', []).factory('util', function () {
             return config.title;
         }
 
-        return isPieChart(type) ? null: {
+        return {
             text: config.title,
             subtext: config.subtitle || '',
-            x: 50,
+            x: config.titleX || 50
         };
     }
 

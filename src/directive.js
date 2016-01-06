@@ -27,6 +27,7 @@ function getLinkFunction($http, theme, util, type) {
                 showXAxis: true,
                 showYAxis: true,
                 showLegend: true,
+                dataAxis: config.dataAxis || 'x'
             }, config);
 
             var grid = config.grid || {
@@ -66,6 +67,12 @@ function getLinkFunction($http, theme, util, type) {
                 series: util.getSeries(data, config, type),
                 grid: grid
             };
+
+            if (config.dataAxis == 'y') {
+                var temp = options.yAxis;
+                options.yAxis = options.xAxis;
+                options.xAxis = temp;
+            }
 
             if (!config.showXAxis) {
                 angular.forEach(options.xAxis, function (axis) {
@@ -170,6 +177,14 @@ function getLinkFunction($http, theme, util, type) {
                 } else {
                     chart.showLoading({ text: scope.config.errorMsg || '没有数据', textStyle: textStyle });
                 }
+            }
+
+            // bind event
+            if (scope.config.on) {
+                Object.keys(scope.config.on).forEach(function(e) {
+                    chart.un(echarts.config.EVENT[e], scope.config.on[e]);
+                    chart.on(echarts.config.EVENT[e], scope.config.on[e]);
+                });
             }
         }
 

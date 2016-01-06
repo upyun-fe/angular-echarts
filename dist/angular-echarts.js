@@ -20,7 +20,8 @@ function getLinkFunction($http, theme, util, type) {
             config = angular.extend({
                 showXAxis: true,
                 showYAxis: true,
-                showLegend: true
+                showLegend: true,
+                dataAxis: config.dataAxis || 'x'
             }, config);
             var grid = config.grid || {
                     x: '3.5%',
@@ -54,6 +55,11 @@ function getLinkFunction($http, theme, util, type) {
                     series: util.getSeries(data, config, type),
                     grid: grid
                 };
+            if (config.dataAxis == 'y') {
+                var temp = options.yAxis;
+                options.yAxis = options.xAxis;
+                options.xAxis = temp;
+            }
             if (!config.showXAxis) {
                 angular.forEach(options.xAxis, function (axis) {
                     axis.axisLine = { show: false };
@@ -161,6 +167,13 @@ function getLinkFunction($http, theme, util, type) {
                         textStyle: textStyle
                     });
                 }
+            }
+            // bind event
+            if (scope.config.on) {
+                Object.keys(scope.config.on).forEach(function (e) {
+                    chart.un(echarts.config.EVENT[e], scope.config.on[e]);
+                    chart.on(echarts.config.EVENT[e], scope.config.on[e]);
+                });
             }
         }
         // update when charts config changes
@@ -468,10 +481,10 @@ angular.module('angular-echarts.util', []).factory('util', function () {
         if (angular.isObject(config.title)) {
             return config.title;
         }
-        return isPieChart(type) ? null : {
+        return {
             text: config.title,
             subtext: config.subtitle || '',
-            x: 50
+            x: config.titleX || 50
         };
     }
     function formatKMBT(y, formatter) {
