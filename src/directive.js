@@ -12,6 +12,7 @@ function getLinkFunction($http, theme, util, type) {
 
         var dom  = element.find('div')[0],
             width, height, chart;
+        var chartEvent = {};
 
         function getSizes(config) {
             width = config.width || attrs.width || '100%';
@@ -27,6 +28,7 @@ function getLinkFunction($http, theme, util, type) {
                 showXAxis: true,
                 showYAxis: true,
                 showLegend: true,
+                dataAxis: config.dataAxis || 'x'
             }, config);
 
             var grid = config.grid || {
@@ -66,6 +68,12 @@ function getLinkFunction($http, theme, util, type) {
                 series: util.getSeries(data, config, type),
                 grid: grid
             };
+
+            if (config.dataAxis == 'y') {
+                var temp = options.yAxis;
+                options.yAxis = options.xAxis;
+                options.xAxis = temp;
+            }
 
             if (!config.showXAxis) {
                 angular.forEach(options.xAxis, function (axis) {
@@ -123,6 +131,23 @@ function getLinkFunction($http, theme, util, type) {
 
             if (!chart) {
                 chart = echarts.init(dom, theme.get(scope.config.theme || 'macarons'));
+            }
+
+            if (scope.config.event) {
+                if (!Array.isArray(scope.config.event)) {
+                    scope.config.event = [scope.config.event];
+                }
+
+                if (Array.isArray(scope.config.event)) {
+                    scope.config.event.forEach(function (ele) {
+                        if(!chartEvent[ele.type]) {
+                            chartEvent[ele.type] = true;
+                            chart.on(ele.type, function (param) {
+                                ele.fn(param);
+                            });
+                        }
+                    });
+                }
             }
 
             // string type for data param is assumed to ajax datarequests

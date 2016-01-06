@@ -9,6 +9,7 @@ function getLinkFunction($http, theme, util, type) {
     return function (scope, element, attrs) {
         scope.config = scope.config || {};
         var dom = element.find('div')[0], width, height, chart;
+        var chartEvent = {};
         function getSizes(config) {
             width = config.width || attrs.width || '100%';
             height = config.height || attrs.height || '100%';
@@ -20,7 +21,8 @@ function getLinkFunction($http, theme, util, type) {
             config = angular.extend({
                 showXAxis: true,
                 showYAxis: true,
-                showLegend: true
+                showLegend: true,
+                dataAxis: config.dataAxis || 'x'
             }, config);
             var grid = config.grid || {
                     x: '3.5%',
@@ -54,6 +56,11 @@ function getLinkFunction($http, theme, util, type) {
                     series: util.getSeries(data, config, type),
                     grid: grid
                 };
+            if (config.dataAxis == 'y') {
+                var temp = options.yAxis;
+                options.yAxis = options.xAxis;
+                options.xAxis = temp;
+            }
             if (!config.showXAxis) {
                 angular.forEach(options.xAxis, function (axis) {
                     axis.axisLine = { show: false };
@@ -104,6 +111,21 @@ function getLinkFunction($http, theme, util, type) {
             getSizes(scope.config);
             if (!chart) {
                 chart = echarts.init(dom, theme.get(scope.config.theme || 'macarons'));
+            }
+            if (scope.config.event) {
+                if (!Array.isArray(scope.config.event)) {
+                    scope.config.event = [scope.config.event];
+                }
+                if (Array.isArray(scope.config.event)) {
+                    scope.config.event.forEach(function (ele) {
+                        if (!chartEvent[ele.type]) {
+                            chartEvent[ele.type] = true;
+                            chart.on(ele.type, function (param) {
+                                ele.fn(param);
+                            });
+                        }
+                    });
+                }
             }
             // string type for data param is assumed to ajax datarequests
             if (angular.isString(scope.data)) {
@@ -468,10 +490,10 @@ angular.module('angular-echarts.util', []).factory('util', function () {
         if (angular.isObject(config.title)) {
             return config.title;
         }
-        return isPieChart(type) ? null : {
+        return {
             text: config.title,
             subtext: config.subtitle || '',
-            x: 50
+            x: config.titleX || 50
         };
     }
     function formatKMBT(y, formatter) {
