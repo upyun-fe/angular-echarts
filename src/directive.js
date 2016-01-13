@@ -114,6 +114,10 @@ function getLinkFunction($http, theme, util, type) {
                 }, config.dataZoom);
             }
 
+            if (config.color) {
+                options.color = config.color;
+            }
+
             return options;
         }
 
