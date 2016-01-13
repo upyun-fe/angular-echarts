@@ -56,12 +56,18 @@ angular.module('angular-echarts.util', []).factory('util', function () {
                 yAxisIndex: (serie.yAxisIndex) ? serie.yAxisIndex : 0
             };
 
+            if (serie.itemStyle) {
+                conf.itemStyle = conf.itemStyle ? conf.itemStyle : {};
+                angular.extend(conf.itemStyle, serie.itemStyle);
+            }
+
             // area chart is actually line chart with special itemStyle
             if (type === 'area') {
                 conf.type = 'line';
-                conf.itemStyle = {
-                    normal: { areaStyle: { type: 'default'}}
-                };
+                conf.itemStyle = conf.itemStyle ? conf.itemStyle : {};
+                conf.itemStyle.normal = conf.itemStyle.normal ? conf.itemStyle.normal : {};
+                conf.itemStyle.normal.areaStyle = conf.itemStyle.normal.areaStyle ? conf.itemStyle.normal.areaStyle : {};
+                angular.extend(conf.itemStyle.normal.areaStyle, {type: 'default'});
             }
 
             // gauge chart need many special config

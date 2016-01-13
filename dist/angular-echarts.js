@@ -317,10 +317,17 @@ angular.module('angular-echarts.util', []).factory('util', function () {
                     symbolSize: serie.symbolSize | 2,
                     yAxisIndex: serie.yAxisIndex ? serie.yAxisIndex : 0
                 };
+            if (serie.itemStyle) {
+                conf.itemStyle = conf.itemStyle ? conf.itemStyle : {};
+                angular.extend(conf.itemStyle, serie.itemStyle);
+            }
             // area chart is actually line chart with special itemStyle
             if (type === 'area') {
                 conf.type = 'line';
-                conf.itemStyle = { normal: { areaStyle: { type: 'default' } } };
+                conf.itemStyle = conf.itemStyle ? conf.itemStyle : {};
+                conf.itemStyle.normal = conf.itemStyle.normal ? conf.itemStyle.normal : {};
+                conf.itemStyle.normal.areaStyle = conf.itemStyle.normal.areaStyle ? conf.itemStyle.normal.areaStyle : {};
+                angular.extend(conf.itemStyle.normal.areaStyle, { type: 'default' });
             }
             // gauge chart need many special config
             if (type === 'gauge') {
@@ -562,8 +569,8 @@ angular.module('angular-echarts.theme').factory('blue', function () {
     return {
         // 默认色板
         color: [
-                    '#1790cf','#1bb2d8','#99d2dd','#88b0bb',
-                    '#1c7099','#038cc4','#75abd0','#afd6dd'
+                    '#006375','#4faac3','#288bcd','#cae1d4',
+                    '#a3d7e4','#038cc4','#75abd0','#afd6dd'
                 ],
         // 图表标题
         title: {

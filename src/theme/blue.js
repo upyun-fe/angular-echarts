@@ -8,8 +8,8 @@ angular.module('angular-echarts.theme').factory('blue', function () {
     return {
         // 默认色板
         color: [
-            '#1790cf','#1bb2d8','#99d2dd','#88b0bb',
-            '#1c7099','#038cc4','#75abd0','#afd6dd'
+            '#006375','#4faac3','#288bcd','#cae1d4',
+            '#a3d7e4','#038cc4','#75abd0','#afd6dd'
         ],
 
         // 图表标题
