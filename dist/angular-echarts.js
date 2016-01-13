@@ -94,6 +94,9 @@ function getLinkFunction($http, theme, util, type) {
                     realtime: true
                 }, config.dataZoom);
             }
+            if (config.color) {
+                options.color = config.color;
+            }
             return options;
         }
         var isAjaxInProgress = false;
