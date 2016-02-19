@@ -18,10 +18,10 @@ function getLinkFunction($http, theme, util, type) {
         }
         function getOptions(data, config, type) {
             var grid = config.grid || {
-                    x: '3.5%',
-                    x2: '4%',
-                    y: '10%',
-                    y2: '10%'
+                    left: '3.5%',
+                    right: '4%',
+                    top: '10%',
+                    bottom: '10%'
                 };
             var options = {
                     grid: grid,
