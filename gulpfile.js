@@ -32,7 +32,7 @@ gulp.task('publish', ['build'], function () {
 
     // bump bower, npm versions
     gulp.src(['package.json', 'bower.json'])
-        .pipe(plugins.bump())
+        .pipe(plugins.bump({version: '4.0.3'}))
         .pipe(gulp.dest('.'));
 
 });

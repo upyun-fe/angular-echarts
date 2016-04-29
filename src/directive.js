@@ -12,12 +12,14 @@ function getLinkFunction($http, theme, util, type) {
 
         var ndWrapper = element.find('div')[0],
             ndParent = element.parent()[0],
-            parentWidth = ndParent.clientWidth,
-            parentHeight = ndParent.clientHeight,
+            parentWidth,
+            parentHeight,
             width, height, chart;
         var chartEvent = {};
 
         function getSizes() {
+            parentWidth = ndParent.clientWidth;
+            parentHeight = ndParent.clientHeight;
             width = parseInt(attrs.width) || parentWidth || 320;
             height = parseInt(attrs.height) || parentHeight || 240;
 
