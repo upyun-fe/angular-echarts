@@ -4,7 +4,7 @@
  * theme services
  * posible themes: infographic macarons shine dark blue green red gray default
  */
-angular.module('angular-echarts.theme', []).factory('theme', ['infographic', 'macarons', 'shine', 'dark', 'blue', 'green', 'red', 'tech', function (infographic, macarons, shine, dark, blue, green, red, tech) {
+angular.module('angular-echarts.theme', []).factory('theme', ['infographic', 'macarons', 'shine', 'dark', 'blue', 'green', 'red', function (infographic, macarons, shine, dark, blue, green, red, grey) {
     var themes = {
         infographic: infographic,
         macarons: macarons,
@@ -12,8 +12,7 @@ angular.module('angular-echarts.theme', []).factory('theme', ['infographic', 'ma
         dark: dark,
         blue: blue,
         green: green,
-        red: red,
-        tech: tech
+        red: red
     };
 
     return {
@@ -23,4 +22,3 @@ angular.module('angular-echarts.theme', []).factory('theme', ['infographic', 'ma
     };
 
 }]);
-
