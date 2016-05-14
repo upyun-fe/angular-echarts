@@ -13,7 +13,7 @@ gulp.task('build', function () {
         .pipe(plugins.clean());
 
     // build js
-    gulp.src(['src/directive.js', 'src/util.js', 'src/theme.js', 'src/theme/*.js'])
+    gulp.src(['src/ployfill.js', 'src/directive.js', 'src/util.js', 'src/theme.js', 'src/theme/*.js'])
         .pipe(plugins.removeUseStrict())
         .pipe(plugins.concat('angular-echarts.js'))
         .pipe(plugins.wrap('(function () {<%= contents %>})();'))
